@@ -1,4 +1,4 @@
-# Komputasi Numerik
+# Komputasi Numerik (D)
 ## Kelompok 12
 | NRP | Nama |
 | :--- | :--- |
