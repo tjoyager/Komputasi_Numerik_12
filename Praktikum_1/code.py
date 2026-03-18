@@ -17,6 +17,13 @@ def regula_falsi():
             messagebox.showerror("Error", "Tidak ada perubahan tanda!")
             return
 
+        x1_awal = x1
+        x2_awal = x2
+
+        if f(x1) == f(x2):
+            messagebox.showerror("Error", "Pembagian nol (f(x1) = f(x2))")
+            return
+
         for row in tree.get_children():
             tree.delete(row)
 
@@ -26,13 +33,16 @@ def regula_falsi():
             xr = x2 - (f(x2) * (x1 - x2)) / (f(x1) - f(x2))
             fx = f(xr)
 
-            error = "-" if xr_old is None else abs(xr - xr_old)
+            if xr_old is None:
+                error = "-"
+            else:
+                error = abs((xr - xr_old) / xr) * 100
 
             tree.insert("", "end", values=(
                 i,
                 f"{xr:.6f}",
                 f"{fx:.6f}",
-                error if error == "-" else f"{error:.6f}"
+                error if error == "-" else f"{error:.6f}%"
             ))
 
             if f(x1) * fx < 0:
@@ -44,14 +54,14 @@ def regula_falsi():
 
         label_hasil.config(text=f"Akar ≈ {xr:.6f}")
 
-        x_plot = np.linspace(x1-1, x2+1, 200)
+        x_plot = np.linspace(x1_awal - 1, x2_awal + 1, 200)
         y_plot = [f(i) for i in x_plot]
 
         plt.figure(figsize=(6,4))
         plt.plot(x_plot, y_plot, label="f(x)")
         plt.axhline(0)
         plt.scatter(xr, f(xr), color='red', label="Akar")
-        plt.title("Grafik f(x)")
+        plt.title("Grafik Regula Falsi")
         plt.legend()
         plt.grid()
         plt.show()
@@ -59,7 +69,6 @@ def regula_falsi():
     except:
         messagebox.showerror("Error", "Input tidak valid!")
 
-# GUI
 root = tk.Tk()
 root.title("Metode Regula Falsi")
 root.geometry("750x500")
@@ -69,7 +78,7 @@ root.grid_columnconfigure(1, weight=3)
 root.grid_rowconfigure(5, weight=1)
 
 style = ttk.Style()
-style.configure("Treeview", font=("Consolas", 8), rowheight=22)
+style.configure("Treeview", font=("Consolas", 9), rowheight=22)
 style.configure("Treeview.Heading", font=("Consolas", 10, "bold"))
 
 tk.Label(root, text="f(x):").grid(row=0, column=0, sticky="w", padx=5)
@@ -95,7 +104,7 @@ input_iterasi.insert(0, "5")
 tk.Button(root, text="Hitung", command=regula_falsi)\
     .grid(row=4, column=0, columnspan=2, pady=10)
 
-columns = ("Iterasi", "xr", "f(xt)", "Error")
+columns = ("Iterasi", "xr", "f(xr)", "Error")
 tree = ttk.Treeview(root, columns=columns, show="headings", height=8)
 
 tree.heading("Iterasi", text="Iterasi")
