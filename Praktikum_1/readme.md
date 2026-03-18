@@ -1,4 +1,4 @@
-# 📊 Algoritma Metode Regula Falsi (GUI - Python)
+# Algoritma Metode Regula Falsi (Python)
 
 ```python
 import numpy as np
